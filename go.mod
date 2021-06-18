@@ -1,4 +1,4 @@
-module github.com/Striker87/members-club
+module github.com/Striker87/members_club
 
 go 1.16
 

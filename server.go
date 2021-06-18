@@ -2,16 +2,12 @@ package members
 
 import (
 	"context"
-	"encoding/json"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"net/mail"
-	"regexp"
 	"time"
 
-	"github.com/Striker87/members-club/storage"
+	"github.com/Striker87/members_club/storage"
 	"github.com/gorilla/mux"
 	"github.com/jordan-wright/unindexed"
 )
@@ -55,78 +51,8 @@ func (s *Server) initRouter() {
 	s.router.NotFoundHandler = http.HandlerFunc(s.notFound)
 }
 
-func (s Server) notFound(w http.ResponseWriter, _ *http.Request) {
-	w.WriteHeader(http.StatusNotFound)
-	s.executeTemplate(w, "404.html", nil)
-}
-
-func (s *Server) index(w http.ResponseWriter, _ *http.Request) {
-	if err := s.templates.ExecuteTemplate(w, "index.html", s.store); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func isEmailValid(email string) bool {
-	_, err := mail.ParseAddress(email)
-	return err == nil
-}
-
-var regName = regexp.MustCompile(`^[a-zA-Z\.\s]+$`)
-
-func isValidName(name string) bool {
-	return regName.Match([]byte(name))
-}
-
-func (s *Server) addMemberHandler(w http.ResponseWriter, r *http.Request) {
-	jsonData, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		newErrorResponse(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	var user storage.User
-	if err := json.Unmarshal(jsonData, &user); err != nil {
-		newErrorResponse(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	if !isValidName(user.Name) {
-		newErrorResponse(w, "members name must contains only English letters, dots and spaces", http.StatusBadRequest)
-		return
-	}
-
-	if !isEmailValid(user.Email) {
-		newErrorResponse(w, "wrong email", http.StatusBadRequest)
-		return
-	}
-
-	if err := user.Add(s.store); err != nil {
-		newErrorResponse(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	if err := json.NewEncoder(w).Encode(statusResponse{"ok"}); err != nil {
-		newErrorResponse(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-}
-
 func (s *Server) executeTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 	if err := s.templates.ExecuteTemplate(w, tmpl, data); err != nil {
 		log.Fatal(err)
 	}
-}
-
-type statusResponse struct {
-	Status string `json:"status"`
-}
-
-type errorResponse struct {
-	Error string `json:"error"`
-}
-
-func newErrorResponse(w http.ResponseWriter, message string, statusCode int) {
-	w.Header().Set("Content-type", "application/json")
-	jsonError, _ := json.Marshal(errorResponse{message})
-	http.Error(w, string(jsonError), statusCode)
 }

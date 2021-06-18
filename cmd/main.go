@@ -8,9 +8,9 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/Striker87/members-club"
-	"github.com/Striker87/members-club/router"
-	"github.com/Striker87/members-club/storage"
+	"github.com/Striker87/members_club"
+	"github.com/Striker87/members_club/router"
+	"github.com/Striker87/members_club/storage"
 	"github.com/spf13/viper"
 )
 
