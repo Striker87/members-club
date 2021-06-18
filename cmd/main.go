@@ -31,7 +31,17 @@ func main() {
 		}
 	}()
 
-	// graceful shutdown
+	gracefulShutdown(srv)
+}
+
+func initConfig() error {
+	viper.AddConfigPath(".")
+	viper.SetConfigName("config")
+
+	return viper.ReadInConfig()
+}
+
+func gracefulShutdown(srv members.Server) {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 
@@ -43,11 +53,4 @@ func main() {
 	defer shutdown()
 
 	_ = srv.HttpServer.Shutdown(ctx)
-}
-
-func initConfig() error {
-	viper.AddConfigPath(".")
-	viper.SetConfigName("config")
-
-	return viper.ReadInConfig()
 }
