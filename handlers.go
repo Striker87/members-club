@@ -38,6 +38,8 @@ func (s *Server) addMemberHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-type", "application/json")
+
 	if err := json.NewEncoder(w).Encode(statusResponse{"ok"}); err != nil {
 		newErrorResponse(w, err.Error(), http.StatusInternalServerError)
 		return
