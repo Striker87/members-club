@@ -2,11 +2,11 @@ package members_club
 
 import (
 	"encoding/json"
-	validations2 "github.com/Striker87/members_club/pkg/validations"
 	"io/ioutil"
 	"log"
 	"net/http"
 
+	"github.com/Striker87/members_club/pkg/validations"
 	"github.com/Striker87/members_club/storage"
 )
 
@@ -23,12 +23,12 @@ func (s *Server) addMemberHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !validations2.IsValidName(user.Name) {
+	if !validations.IsValidName(user.Name) {
 		newErrorResponse(w, "members name must contains only English letters, dots and spaces", http.StatusBadRequest)
 		return
 	}
 
-	if !validations2.IsEmailValid(user.Email) {
+	if !validations.IsEmailValid(user.Email) {
 		newErrorResponse(w, "wrong email", http.StatusBadRequest)
 		return
 	}
