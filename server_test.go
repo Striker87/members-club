@@ -1,12 +1,13 @@
 package members_club
 
 import (
-	"github.com/Striker87/members_club/router"
-	"github.com/Striker87/members_club/storage"
-	"github.com/spf13/viper"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/Striker87/members_club/router"
+	"github.com/Striker87/members_club/storage"
+	"github.com/spf13/viper"
 )
 
 func TestIndex(t *testing.T) {
