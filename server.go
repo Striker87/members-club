@@ -1,4 +1,4 @@
-package members
+package members_club
 
 import (
 	"context"

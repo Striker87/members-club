@@ -22,7 +22,7 @@ func main() {
 	store := make(map[string]storage.User)
 	route := router.Set()
 
-	srv := members.Run(viper.GetString("port"), route, store)
+	srv := members_club.Run(viper.GetString("port"), route, store)
 	go func() {
 		fmt.Println("Server started at port:", viper.GetString("port"))
 
@@ -41,7 +41,7 @@ func initConfig() error {
 	return viper.ReadInConfig()
 }
 
-func gracefulShutdown(srv members.Server) {
+func gracefulShutdown(srv members_club.Server) {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 
