@@ -19,12 +19,12 @@ func main() {
 		log.Fatalf("error init config: %s", err)
 	}
 
-	store := make([]storage.User, 0)
-	router := router.Set()
+	store := make(map[string]storage.User)
+	route := router.Set()
 
-	srv := members.Run(viper.GetString("port"), router, store)
+	srv := members.Run(viper.GetString("port"), route, store)
 	go func() {
-		fmt.Println("Server started at port", viper.GetString("port"))
+		fmt.Println("Server started at port:", viper.GetString("port"))
 
 		if err := srv.HttpServer.ListenAndServe(); err != nil {
 			log.Fatalf("failed to listen and serve: %+v", err)
@@ -42,10 +42,7 @@ func main() {
 	ctx, shutdown := context.WithTimeout(context.Background(), 5*time.Second)
 	defer shutdown()
 
-	srv.HttpServer.Shutdown(ctx)
-
-	//log.Fatal(http.ListenAndServe(":8080", router))
-
+	_ = srv.HttpServer.Shutdown(ctx)
 }
 
 func initConfig() error {

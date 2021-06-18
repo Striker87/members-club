@@ -9,8 +9,8 @@
             <label for="email" class="form-label">Email:</label>
             <input type="email" class="form-control" id="email">
         </div>
-        <button type="button" class="btn btn-success" id="add">Add</button>
-        <button type="button" class="btn btn-primary" id="clear">Clear</button>
+        <button type="button" class="btn btn-success" id="add-btn">Add</button>
+        <button type="button" class="btn btn-primary" id="clear-btn">Clear</button>
     </form>
 
     <table class="table">
@@ -23,12 +23,14 @@
             </tr>
         </thead>
         <tbody>
+            {{ range $key, $value := . }}
             <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
+                <th scope="row">{{ $value.Id }}</th>
+                <td>{{ $value.Name }}</td>
+                <td>{{ $key }}</td>
+                <td>{{ $value.RegDate }}</td>
             </tr>
+            {{ end }}
         </tbody>
     </table>
 </div>
